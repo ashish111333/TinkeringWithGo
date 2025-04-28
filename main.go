@@ -1,16 +1,9 @@
 package main
 
-import (
-	"fmt"
-	"time"
-
-	"github.com/ashish111333/twgo/fun"
-)
-
 func main() {
-	st := time.Now()
-	fun.StrWithoutBuffer(100000)
-	et := time.Since(st)
-	fmt.Println(et)
+
+	// fun.StrUsingBuilder is faster than fun.StrWithoutBuilder
+	// the builder one starts outperforming the later significantly
+	// after the number of strings become large (num of strings >10 appx)
 
 }
