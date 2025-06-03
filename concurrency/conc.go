@@ -35,3 +35,46 @@ func CreateFiles(n, nt int, s string) error {
 	return nil
 
 }
+
+// full cpu bound work (simply adding list items)
+func addSLiceItems(s []int) int {
+
+	sum := 0
+	for _, v := range s {
+		sum += v
+	}
+	return sum
+}
+
+// concurrent version of addSliceItems
+func AddSliceItemsC(goroutines int64, s []int64) int64 {
+	sp := SlicesToProcess(goroutines, s)
+	fmt.Println(sp)
+	return 0
+}
+
+// utils fn for addSliceC returns slice of slices for go routines
+func SlicesToProcess(g int64, s []int64) [][]int64 {
+
+	elementsPerGSlice := []int64{}
+	r := int64(len(s) % int(g))
+	q := int64((len(s) - int(r))) / g
+	res := [][]int64{}
+	var i, j int64 = 0, 0
+	for i < g {
+		if j < r {
+			elementsPerGSlice = append(elementsPerGSlice, q+1)
+		} else {
+			elementsPerGSlice = append(elementsPerGSlice, q)
+		}
+		j++
+		i++
+	}
+	i, j = 0, 0
+	for v := range g {
+		j = elementsPerGSlice[v]
+		res = append(res, s[i:j])
+		i = j
+	}
+	return res
+}
