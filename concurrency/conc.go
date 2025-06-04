@@ -36,7 +36,7 @@ func CreateFiles(n, nt int, s string) error {
 
 }
 
-// full cpu bound work (simply adding list items)
+// pure cpu bound work (simply adding list items)
 func addSLiceItems(s []int) int {
 
 	sum := 0
@@ -72,7 +72,7 @@ func SlicesToProcess(g int64, s []int64) [][]int64 {
 	}
 	i, j = 0, 0
 	for v := range g {
-		j = elementsPerGSlice[v]
+		j += elementsPerGSlice[v]
 		res = append(res, s[i:j])
 		i = j
 	}
