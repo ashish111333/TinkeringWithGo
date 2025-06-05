@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"sync"
+	"sync/atomic"
 )
 
 // creates random files with random texts s is number of strings to add ,n is no of files
@@ -36,7 +38,7 @@ func CreateFiles(n, nt int, s string) error {
 
 }
 
-// pure cpu bound work (simply adding list items)
+// pure cpu bound work (simply adding slice items)
 func addSLiceItems(s []int) int {
 
 	sum := 0
@@ -50,7 +52,24 @@ func addSLiceItems(s []int) int {
 func AddSliceItemsC(goroutines int64, s []int64) int64 {
 	sp := SlicesToProcess(goroutines, s)
 	fmt.Println(sp)
-	return 0
+	// launch routines to process these slices
+	var i, res int64 = 0, 0
+	var wg sync.WaitGroup
+	for i < goroutines {
+		wg.Add(1)
+		go func(idx int64) {
+			defer wg.Done()
+			var sum int64 = 0
+			for _, v := range sp[idx] {
+				sum += v
+			}
+			atomic.AddInt64(&res, sum)
+		}(i)
+		i++
+	}
+	wg.Wait()
+
+	return res
 }
 
 // utils fn for addSliceC returns slice of slices for go routines

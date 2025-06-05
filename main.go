@@ -16,7 +16,7 @@ func main() {
 	if err != nil {
 		fmt.Println(err.Error())
 	}*/
-	s := concurrency.RandIntSlice(5, 1000)
+	s := concurrency.RandIntSlice(2, 5)
 	sum := concurrency.AddSliceItemsC(2, s)
 	fmt.Println(sum)
 }
