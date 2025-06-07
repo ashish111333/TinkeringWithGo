@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-var s []int64 = RandIntSlice(800000, 100000)
+var s []int64 = RandIntSlice(80000000, 100000)
 
 func TestAddSliceItems(t *testing.T) {
 	if AddSLiceItems(s) != (AddSliceItemsC(2, s)) {
@@ -14,7 +14,7 @@ func TestAddSliceItems(t *testing.T) {
 func BenchmarkName(b *testing.B) {
 	b.Run("AddSLiceiItemsC", func(b *testing.B) {
 		for b.Loop() {
-			AddSliceItemsC(1000, s)
+			AddSliceItemsC(12, s)
 		}
 	})
 	b.Run("AddSliceItems", func(b *testing.B) {

@@ -11,4 +11,7 @@ func main() {
 		fmt.Println(err.Error())
 	}*/
 
+	// benchmark AddSLiceItems vs AddSLiceItemsC to see which one if faster does
+	// more go routines  always means faster ? Yes or NO ?.
+
 }
