@@ -50,8 +50,8 @@ func addSLiceItems(s []int) int {
 
 // concurrent version of addSliceItems
 func AddSliceItemsC(goroutines int64, s []int64) int64 {
+	//divide slices equally among go routines
 	sp := SlicesToProcess(goroutines, s)
-	fmt.Println(sp)
 	// launch routines to process these slices
 	var i, res int64 = 0, 0
 	var wg sync.WaitGroup
