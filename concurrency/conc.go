@@ -39,9 +39,9 @@ func CreateFiles(n, nt int, s string) error {
 }
 
 // pure cpu bound work (simply adding slice items)
-func addSLiceItems(s []int) int {
+func AddSLiceItems(s []int64) int64 {
 
-	sum := 0
+	var sum int64 = 0
 	for _, v := range s {
 		sum += v
 	}
