@@ -53,9 +53,9 @@ func AddSliceItemsC(goroutines int64, s []int64) int64 {
 	//divide slices equally among go routines
 	sp := SlicesToProcess(goroutines, s)
 	// launch routines to process these slices
-	var i, res int64 = 0, 0
+	var res int64 = 0
 	var wg sync.WaitGroup
-	for i < goroutines {
+	for i := range goroutines {
 		wg.Add(1)
 		go func(idx int64) {
 			defer wg.Done()
@@ -65,7 +65,7 @@ func AddSliceItemsC(goroutines int64, s []int64) int64 {
 			}
 			atomic.AddInt64(&res, sum)
 		}(i)
-		i++
+
 	}
 	wg.Wait()
 

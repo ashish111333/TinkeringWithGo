@@ -4,16 +4,23 @@ import (
 	"testing"
 )
 
+var s []int64 = RandIntSlice(800000, 100000)
+
 func TestAddSliceItems(t *testing.T) {
-	s := RandIntSlice(40, 50)
 	if AddSLiceItems(s) != (AddSliceItemsC(2, s)) {
 		t.Fatalf("outputs don't match")
 	}
 }
-func BenchmarkAddSLiceItems(b *testing.B) {
-	s := RandIntSlice(10000, 100000)
-	for i := 0; i < b.N; i++ {
-		res := AddSLiceItems(s)
-		b.Logf("Iteration -- %d result --- %d", i, res)
-	}
+func BenchmarkName(b *testing.B) {
+	b.Run("AddSLiceiItemsC", func(b *testing.B) {
+		for b.Loop() {
+			AddSliceItemsC(1000, s)
+		}
+	})
+	b.Run("AddSliceItems", func(b *testing.B) {
+		for b.Loop() {
+			AddSLiceItems(s)
+		}
+	})
+
 }

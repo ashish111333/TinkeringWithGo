@@ -1,11 +1,5 @@
 package main
 
-import (
-	"fmt"
-
-	"github.com/ashish111333/twgo/concurrency"
-)
-
 func main() {
 
 	// fun.StrUsingBuilder is faster than fun.StrWithoutBuilder
@@ -16,7 +10,5 @@ func main() {
 	if err != nil {
 		fmt.Println(err.Error())
 	}*/
-	s := concurrency.RandIntSlice(2, 5)
-	sum := concurrency.AddSliceItemsC(2, s)
-	fmt.Println(sum)
+
 }
