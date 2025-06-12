@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-var s []int64 = RandIntSlice(800000000000120, 50)
+var s []int64 = RandIntSlice(80000000000, 100, 80000000000, true)
 
 func TestAddSliceItems(t *testing.T) {
 	if AddSLiceItems(s) != (AddSliceItemsC(6, s)) {

@@ -2,6 +2,7 @@ package concurrency
 
 import (
 	"crypto/rand"
+	"fmt"
 	mr "math/rand"
 )
 
@@ -12,9 +13,18 @@ func RandString(prefix string) string {
 	return prefix + rand.Text()
 }
 
-func RandIntSlice(l, n int64) []int64 {
-	s := []int64{}
+// if fixed is set to true
+func RandIntSlice(l, n, cap int64, fixed bool) []int64 {
+	s := make([]int64, cap)
+	fmt.Println("created slice of cap:-", cap)
 	var i int64
+	if fixed {
+		num := mr.Int63n(n)
+		for range l {
+			s = append(s, num)
+		}
+		return s
+	}
 	for i = 0; i < l; i++ {
 		s = append(s, mr.Int63n(n))
 	}
