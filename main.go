@@ -11,7 +11,14 @@ func main() {
 		fmt.Println(err.Error())
 	}*/
 
-	// benchmark AddSLiceItems vs AddSLiceItemsC to see which one if faster does
-	// more go routines  always means faster ? Yes or NO ?.
+	// benchmark AddSLiceItems vs AddSLiceItemsC to see which one is faster
+	// make observation about below points.
+	// 1. more go routines  always means faster ? Yes or NO ?.
+
+	// 2. fewer atomic operation better than more ? Yes or NO ?.
+
+	// 3. in the above example for small slices the concurrent version
+	//    is always slower (but how small we are talking Thing !!),
+	//    do you face similar problem when slice is really large  ?.
 
 }

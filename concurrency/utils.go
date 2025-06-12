@@ -20,3 +20,6 @@ func RandIntSlice(l, n int64) []int64 {
 	}
 	return s
 }
+func OsThreadsUnderRuntime() {
+
+}
