@@ -71,6 +71,35 @@ func AddSliceItemsC(goroutines int64, s []int64) int64 {
 
 	return res
 }
+func addSliceItemsCChannels(goroutines int64, s []int64) int64 {
+	//divide slices equally among go routines
+	sp := SlicesToProcess(goroutines, s)
+	// launch routines to process these slices
+	resChan := make(chan int64, goroutines)
+	var wg sync.WaitGroup
+
+	for i := range goroutines {
+		wg.Add(1)
+		go func(idx int64) {
+			defer wg.Done()
+			var sum int64 = 0
+			for _, v := range sp[idx] {
+				sum += v
+			}
+			resChan <- sum
+		}(i)
+
+	}
+	wg.Wait()
+	close(resChan)
+	var res int64
+	for v := range resChan {
+		res += v
+	}
+
+	return res
+
+}
 
 // utils fn for addSliceC returns slice of slices for go routines
 func SlicesToProcess(g int64, s []int64) [][]int64 {

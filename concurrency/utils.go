@@ -2,7 +2,6 @@ package concurrency
 
 import (
 	"crypto/rand"
-	"fmt"
 	mr "math/rand"
 )
 
@@ -16,7 +15,6 @@ func RandString(prefix string) string {
 // if fixed is set to true
 func RandIntSlice(l, n, cap int64, fixed bool) []int64 {
 	s := make([]int64, cap)
-	fmt.Println("created slice of cap:-", cap)
 	var i int64
 	if fixed {
 		num := mr.Int63n(n)
@@ -31,5 +29,8 @@ func RandIntSlice(l, n, cap int64, fixed bool) []int64 {
 	return s
 }
 func OsThreadsUnderRuntime() {
+
+}
+func GetRuntimeStats() {
 
 }

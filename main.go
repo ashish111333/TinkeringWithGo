@@ -18,7 +18,9 @@ func main() {
 	// 2. fewer atomic operation better than more ? Yes or NO ?.
 
 	// 3. in the above example for small slices the concurrent version
-	//    is always slower (but how small we are talking Thing !!),
+	//    is always slower (but how small we are talking Think !!),
 	//    do you face similar problem when slice is really large  ?.
 
+	// 4. important observation the the addSliceItems using channels is faster
+	//	  than the ones using atomics ...why ?????
 }
