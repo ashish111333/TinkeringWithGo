@@ -11,7 +11,7 @@ func main() {
 		fmt.Println(err.Error())
 	}*/
 
-	// benchmark AddSLiceItems vs AddSLiceItemsC vs AddSliceItemsCChannels see
+	// benchmark AddSLiceItems vs AddSLiceItemsC vs AddSliceItemsCChannels vs AddSlice see
 	// which one is faster make observation about below points.
 
 	// 1. more go routines  always means faster ? Yes or NO ?.
@@ -22,6 +22,10 @@ func main() {
 	//    is always slower than the synchronous version (but how small we are talking Think !!),
 	//    do you face similar problem when slice is really large  ?.
 
-	// 4. important observation the the addSliceItems using channels is faster
+	// 4. Important observation:- the the addSliceItems using channels is faster
 	//	  than the ones using atomics ...why ?????
+
+	//5.  AddSliceItemsCMx is even faster than the channels version of AddSliceItems
+	//	  final conclusion-------->
+	//	  AddSliceItemsCMx	> AddSliceItemsCChannels > AddSliceItemsC > AddSliceItems
 }
