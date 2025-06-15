@@ -11,8 +11,8 @@ func main() {
 		fmt.Println(err.Error())
 	}*/
 
-	// benchmark AddSLiceItems vs AddSLiceItemsC vs AddSliceItemsCChannels vs AddSlice see
-	// which one is faster make observation about below points.
+	// benchmark AddSLiceItems vs AddSLiceItemsC vs AddSliceItemsCChannels vs AddSliceItemsMx see
+	// which one is faster ?. make observation about below points.
 
 	// 1. more go routines  always means faster ? Yes or NO ?.
 
