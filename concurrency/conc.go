@@ -101,6 +101,33 @@ func addSliceItemsCChannels(goroutines int64, s []int64) int64 {
 
 }
 
+// concurrent processing for the slices but using mutex instead oc channels
+func AddSliceItemsCMx(goroutines int64, s []int64) int64 {
+	//divide slices equally among go routines
+	sp := SlicesToProcess(goroutines, s)
+	// launch routines to process these slices
+	var res int64 = 0
+	var wg sync.WaitGroup
+	var mx sync.Mutex
+	for i := range goroutines {
+		wg.Add(1)
+		go func(idx int64) {
+			defer wg.Done()
+			var sum int64 = 0
+			for _, v := range sp[idx] {
+				sum += v
+			}
+			mx.Lock()
+			defer mx.Unlock()
+			res += sum
+		}(i)
+
+	}
+	wg.Wait()
+
+	return res
+}
+
 // utils fn for addSliceC returns slice of slices for go routines
 func SlicesToProcess(g int64, s []int64) [][]int64 {
 
