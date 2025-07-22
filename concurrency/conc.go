@@ -128,6 +128,48 @@ func AddSliceItemsCMx(goroutines int64, s []int64) int64 {
 	return res
 }
 
+// simple UpdateVar  (only supporting addition for ints for now )
+func UpdateVar(addr *int, incBy int) {
+	for range incBy {
+		*addr += 1
+	}
+}
+
+// concurrent version  of updateVar using channels
+func UpdateVarCh(addr *int, incBy int) {
+	var wg sync.WaitGroup
+	updatesChan := make(chan int, incBy)
+	for range incBy {
+		updatesChan <- 1
+	}
+	close(updatesChan)
+	for range incBy {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			*addr += <-updatesChan
+		}()
+	}
+	wg.Wait()
+
+}
+
+// concurrent version of updateVar using mutex
+func UpdateVarMx(addr *int, incBy int) {
+	var mx sync.Mutex
+	var wg sync.WaitGroup
+	for range incBy {
+		wg.Add(1)
+		go func() {
+			mx.Lock()
+			defer mx.Unlock()
+			defer wg.Done()
+			*addr += 1
+		}()
+	}
+	wg.Wait()
+}
+
 // utils fn for addSliceC returns slice of slices for go routines
 func SlicesToProcess(g int64, s []int64) [][]int64 {
 

@@ -28,4 +28,5 @@ func main() {
 	//5.  AddSliceItemsCMx is even faster than the channels version of AddSliceItems
 	//	  final conclusion-------->
 	//	  AddSliceItemsCMx	> AddSliceItemsCChannels > AddSliceItemsC > AddSliceItems
+
 }

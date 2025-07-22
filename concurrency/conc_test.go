@@ -15,14 +15,14 @@ func BenchmarkAddSliceItems(b *testing.B) {
 	var sC int64
 	b.Run("AddSLiceItemsC", func(b *testing.B) {
 		for b.Loop() {
-			sC = AddSliceItemsC(12, s)
+			sC = AddSliceItemsC(8000, s)
 		}
 		b.Logf("sum --->%d", sC)
 	})
 	var sCC int64
 	b.Run("AddSliceItemsCButChannels", func(b *testing.B) {
 		for b.Loop() {
-			sCC = addSliceItemsCChannels(12, s)
+			sCC = addSliceItemsCChannels(8000, s)
 		}
 		b.Logf("sum given by channels one-->%d", sCC)
 	})
@@ -30,7 +30,7 @@ func BenchmarkAddSliceItems(b *testing.B) {
 	b.Run("AddSliceItemsCMx", func(b *testing.B) {
 
 		for b.Loop() {
-			sCMx = AddSliceItemsCMx(12, s)
+			sCMx = AddSliceItemsCMx(8000, s)
 		}
 		b.Logf("sum given by mutex approach--->%d", sCMx)
 	})
@@ -41,4 +41,20 @@ func BenchmarkAddSliceItems(b *testing.B) {
 		}
 	})
 
+}
+
+func BenchmarkUpdateVar(b *testing.B) {
+	a := 0
+	times := 500
+	b.Run("updateVar", func(b *testing.B) {
+		UpdateVar(&a, times)
+	})
+	e := 0
+	b.Run("UpdateVarCh", func(b *testing.B) {
+		UpdateVarCh(&e, times)
+	})
+	c := 0
+	b.Run("UpdateVarMx", func(b *testing.B) {
+		UpdateVarMx(&c, times)
+	})
 }
