@@ -1,5 +1,7 @@
 package main
 
+import "github.com/ashish111333/twgo/fun/interfaces"
+
 func main() {
 
 	// fun.StrUsingBuilder is faster than fun.StrWithoutBuilder
@@ -28,5 +30,6 @@ func main() {
 	//5.  AddSliceItemsCMx is even faster than the channels version of AddSliceItems
 	//	  final conclusion-------->
 	//	  AddSliceItemsCMx	> AddSliceItemsCChannels > AddSliceItemsC > AddSliceItems
-
+	var nh interfaces.Human
+	var na interfaces.Animal
 }
