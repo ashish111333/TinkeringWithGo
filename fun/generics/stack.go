@@ -18,7 +18,7 @@ func NewStack[T any]() *Stack[T] {
 	}
 }
 
-// Append value at the end of stacka , ss is the underlying stack slice
+// Append value at the end of stack , ss is the underlying stack slice
 func (s *Stack[T]) Push(val T) {
 	if s.stackData == nil {
 		s.stackData = &[]T{}
@@ -34,7 +34,7 @@ func (s *Stack[T]) Pop() (error, T) {
 	var pop_val T
 	stack_len := s.Stacklen()
 	if s.Stacklen() == 0 {
-		return errors.New("can't pop from an empty stack"), pop_val
+		return cantPopEmptyStack, pop_val
 	}
 	ss := *s.stackData
 	pop_val = ss[stack_len-1]
@@ -54,3 +54,7 @@ func (s *Stack[T]) PrinTStack() {
 	ss := *s.stackData
 	fmt.Println(ss)
 }
+
+var (
+	cantPopEmptyStack = errors.New("can't pop out of an empty stack")
+)
