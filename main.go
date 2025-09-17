@@ -26,7 +26,7 @@ func main() {
 	//	  than the ones using atomics ...why ?????
 
 	//5.  AddSliceItemsCMx is even faster than the channels version of AddSliceItems
+	//	  final conclusion:-
 	//	  AddSliceItemsCMx	> AddSliceItemsCChannels > AddSliceItemsC > AddSliceItems
-	//	  final `conclusion-------->
 
 }
