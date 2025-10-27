@@ -29,4 +29,18 @@ func main() {
 	//	  final conclusion:-
 	//	  AddSliceItemsCMx	> AddSliceItemsCChannels > AddSliceItemsC > AddSliceItems
 
+	//---Contexts---Examples---
+	/*wg := sync.WaitGroup{}
+	ctx, cf := context.WithCancel(context.TODO())
+	//start worker
+	wg.Add(1)
+	go func() {
+		contexts.SimulateIoWork(ctx)
+		defer wg.Done()
+	}()
+	// to stop work call cancel
+	cf()
+	wg.Wait() */
+	//-------------
+
 }
