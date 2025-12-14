@@ -1,6 +1,8 @@
 package concurrency
 
 import (
+	"sync"
+	"sync/atomic"
 	"testing"
 )
 
@@ -57,4 +59,40 @@ func BenchmarkUpdateVar(b *testing.B) {
 	b.Run("UpdateVarMx", func(b *testing.B) {
 		UpdateVarMx(&c, times)
 	})
+}
+
+func BenchmarkCounterAtomicsVsMx(b *testing.B) {
+	var num1 int64 = 0
+	var num2 int64 = 0
+
+	incBy := 50
+	numGoRoutines := incBy
+	b.Run("counterUsingAtomics", func(b *testing.B) {
+		var wg sync.WaitGroup
+		wg.Add(numGoRoutines)
+		for range numGoRoutines {
+			go func() {
+				defer wg.Done()
+				atomic.AddInt64(&num1, 1)
+			}()
+
+		}
+		wg.Wait()
+
+	})
+	b.Run("counterWithMx", func(b *testing.B) {
+		var mx sync.Mutex
+		var wg sync.WaitGroup
+		wg.Add(numGoRoutines)
+		for range numGoRoutines {
+			go func() {
+				mx.Lock()
+				defer mx.Unlock()
+				defer wg.Done()
+				num2 += 1
+			}()
+		}
+		wg.Wait()
+	})
+
 }

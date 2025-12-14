@@ -29,6 +29,8 @@ func main() {
 	//	  final conclusion:-
 	//	  AddSliceItemsCMx	> AddSliceItemsCChannels > AddSliceItemsC > AddSliceItems
 
+	//6. benchmarked concurrent counter, atomics are almost always faster than mutex.
+
 	//---Contexts---Examples---
 	/*wg := sync.WaitGroup{}
 	ctx, cf := context.WithCancel(context.TODO())
