@@ -20,9 +20,14 @@ func (s *Stack[T]) Push(x T) {
 		data: x,
 	}
 	if !s.head.CompareAndSwap(nil, newNode) {
-		currHead := s.head.Load()
-		newNode.down_ptr = currHead
-		s.head.Store(newNode)
+
+		for {
+			currHead := s.head.Load()
+			newNode.down_ptr = currHead
+			if s.head.CompareAndSwap(currHead, newNode) {
+				return
+			}
+		}
 
 	}
 }
