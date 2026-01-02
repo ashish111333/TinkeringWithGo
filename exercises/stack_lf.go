@@ -12,25 +12,43 @@ type node[T interface{}] struct {
 }
 
 type Stack[T interface{}] struct {
-	head atomic.Pointer[*node[T]]
+	head atomic.Pointer[node[T]]
 }
 
 func (s *Stack[T]) Push(x T) {
 	newNode := &node[T]{
 		data: x,
 	}
-	if !s.head.CompareAndSwap(nil, &newNode) {
+	if !s.head.CompareAndSwap(nil, newNode) {
 		currHead := s.head.Load()
-		newNode.down_ptr = *currHead
-		s.head.Store(&newNode)
+		newNode.down_ptr = currHead
+		s.head.Store(newNode)
+
+	}
+}
+
+// change head to second last element from top
+func (s *Stack[T]) Pop() (res T) {
+	if s.head.Load() == nil {
+		return
+	}
+	for {
+		currHead := s.head.Load()
+		prevNode := currHead.down_ptr
+		if s.head.CompareAndSwap(currHead, prevNode) {
+			return currHead.data
+		}
+
 	}
 
 }
 
-// change head to second last element from top
-func (s *Stack[T]) Pop() {
-	var currHead *node[T] = *s.head.Load()
-	preNode := currHead.down_ptr
-	s.head.Store(&preNode)
+func (s *Stack[T]) Head() T {
+	headNode := s.head.Load()
+	return headNode.data
+}
+
+func NewLfStack[T any]() *Stack[T] {
+	return new(Stack[T])
 
 }
