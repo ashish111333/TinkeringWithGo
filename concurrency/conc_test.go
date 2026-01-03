@@ -4,6 +4,8 @@ import (
 	"sync"
 	"sync/atomic"
 	"testing"
+
+	"github.com/ashish111333/twgo/exercises"
 )
 
 var s []int64 = RandIntSlice(8000000, 100, 8000000, false)
@@ -91,6 +93,37 @@ func BenchmarkCounterAtomicsVsMx(b *testing.B) {
 				defer wg.Done()
 				num2 += 1
 			}()
+		}
+		wg.Wait()
+	})
+
+}
+
+func BenchmarkStackMXvsAtomics(b *testing.B) {
+
+	const stackSize = 100
+	b.Run("stackAtomics", func(b *testing.B) {
+		var wg sync.WaitGroup
+		wg.Add(stackSize)
+		stck := exercises.NewLfStack[int]()
+		for i := range stackSize {
+			go func(i int) {
+				defer wg.Done()
+				stck.Push(i)
+			}(i)
+		}
+		wg.Wait()
+
+	})
+	b.Run("stackMx", func(b *testing.B) {
+		stck := exercises.NewStackMx[int]()
+		var wg sync.WaitGroup
+		wg.Add(stackSize)
+		for i := range stackSize {
+			go func(i int) {
+				defer wg.Done()
+				stck.Push(i)
+			}(i)
 		}
 		wg.Wait()
 	})
