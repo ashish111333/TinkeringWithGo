@@ -31,6 +31,9 @@ func main() {
 
 	//6. benchmarked concurrent counter, atomics are almost always faster than mutex.
 
+	// 7. lock free stack almost always outperforms stack created with mutex for medium to large
+	// inputs.
+
 	//---Contexts---Examples---
 	/*wg := sync.WaitGroup{}
 	ctx, cf := context.WithCancel(context.TODO())
