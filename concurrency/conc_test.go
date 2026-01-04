@@ -64,10 +64,10 @@ func BenchmarkUpdateVar(b *testing.B) {
 }
 
 func BenchmarkCounterAtomicsVsMx(b *testing.B) {
-	var num1 int64 = 5
-	var num2 int64 = 5
+	var num1 int64 = 0
+	var num2 int64 = 0
 
-	incBy := 50
+	incBy := 100000000
 	numGoRoutines := incBy
 	b.Run("counterUsingAtomics", func(b *testing.B) {
 		for i := 0; i < b.N; i++ {
