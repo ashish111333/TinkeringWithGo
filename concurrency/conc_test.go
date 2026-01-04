@@ -64,68 +64,78 @@ func BenchmarkUpdateVar(b *testing.B) {
 }
 
 func BenchmarkCounterAtomicsVsMx(b *testing.B) {
-	var num1 int64 = 0
-	var num2 int64 = 0
+	var num1 int64 = 50000
+	var num2 int64 = 50000
 
 	incBy := 50
 	numGoRoutines := incBy
 	b.Run("counterUsingAtomics", func(b *testing.B) {
-		var wg sync.WaitGroup
-		wg.Add(numGoRoutines)
-		for range numGoRoutines {
-			go func() {
-				defer wg.Done()
-				atomic.AddInt64(&num1, 1)
-			}()
+		for i := 0; i < b.N; i++ {
+			var wg sync.WaitGroup
+			wg.Add(numGoRoutines)
+			for range numGoRoutines {
+				go func() {
+					defer wg.Done()
+					atomic.AddInt64(&num1, 1)
+				}()
+
+			}
+			wg.Wait()
 
 		}
-		wg.Wait()
 
 	})
 	b.Run("counterWithMx", func(b *testing.B) {
-		var mx sync.Mutex
-		var wg sync.WaitGroup
-		wg.Add(numGoRoutines)
-		for range numGoRoutines {
-			go func() {
-				mx.Lock()
-				defer mx.Unlock()
-				defer wg.Done()
-				num2 += 1
-			}()
+		for i := 0; i < b.N; i++ {
+			var mx sync.Mutex
+			var wg sync.WaitGroup
+			wg.Add(numGoRoutines)
+			for range numGoRoutines {
+				go func() {
+					mx.Lock()
+					defer mx.Unlock()
+					defer wg.Done()
+					num2 += 1
+				}()
+			}
+			wg.Wait()
+
 		}
-		wg.Wait()
 	})
 
 }
 
 func BenchmarkStackMXvsAtomics(b *testing.B) {
 
-	const stackSize = 100
+	const stackSize = 200000000
 	b.Run("stackAtomics", func(b *testing.B) {
-		var wg sync.WaitGroup
-		wg.Add(stackSize)
-		stck := exercises.NewLfStack[int]()
-		for i := range stackSize {
-			go func(i int) {
-				defer wg.Done()
-				stck.Push(i)
-			}(i)
+		for i := 0; i < b.N; i++ {
+			var wg sync.WaitGroup
+			wg.Add(stackSize)
+			stck := exercises.NewLfStack[int]()
+			for i := range stackSize {
+				go func(i int) {
+					defer wg.Done()
+					stck.Push(i)
+				}(i)
+			}
+			wg.Wait()
 		}
-		wg.Wait()
 
 	})
 	b.Run("stackMx", func(b *testing.B) {
-		stck := exercises.NewStackMx[int]()
-		var wg sync.WaitGroup
-		wg.Add(stackSize)
-		for i := range stackSize {
-			go func(i int) {
-				defer wg.Done()
-				stck.Push(i)
-			}(i)
+		for i := 0; i < b.N; i++ {
+			stck := exercises.NewStackMx[int]()
+			var wg sync.WaitGroup
+			wg.Add(stackSize)
+			for i := range stackSize {
+				go func(i int) {
+					defer wg.Done()
+					stck.Push(i)
+				}(i)
+			}
+			wg.Wait()
 		}
-		wg.Wait()
 	})
 
 }
