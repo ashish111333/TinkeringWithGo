@@ -1,6 +1,7 @@
 package concurrency
 
 import (
+	"fmt"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -14,6 +15,22 @@ func TestAddSliceItems(t *testing.T) {
 	if AddSLiceItems(s) != (AddSliceItemsC(12, s)) {
 		t.Fatalf("outputs don't match")
 	}
+}
+func TestShardedCounter(t *testing.T) {
+
+	sc := NewShardedCounter(6)
+
+	var countUpTo int64 = 100
+	for i := range countUpTo {
+		sc.Inc(i)
+	}
+	sc.Wg.Wait()
+
+	if sc.Total() != countUpTo {
+		fmt.Println(sc.Total())
+		t.FailNow()
+	}
+
 }
 func BenchmarkAddSliceItems(b *testing.B) {
 	var sC int64
