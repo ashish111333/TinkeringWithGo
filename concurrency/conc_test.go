@@ -2,6 +2,7 @@ package concurrency
 
 import (
 	"fmt"
+	"runtime"
 	"sync"
 	"sync/atomic"
 	"testing"
@@ -24,7 +25,6 @@ func TestShardedCounter(t *testing.T) {
 	for i := range countUpTo {
 		sc.Inc(i)
 	}
-	sc.Wg.Wait()
 
 	if sc.Total() != countUpTo {
 		fmt.Println(sc.Total())
@@ -32,6 +32,70 @@ func TestShardedCounter(t *testing.T) {
 	}
 
 }
+func TestSimpleCounter(t *testing.T) {
+	var countUpto int64 = 100
+
+	nc := NewCounter(countUpto)
+	for range countUpto {
+		nc.Inc()
+	}
+	if nc.Count != 100 {
+		t.FailNow()
+	}
+}
+
+func BenchmarkShardedCounterVsConcurrentcounter(b *testing.B) {
+	const (
+		shards           int64 = 64
+		incrementsPerGor int64 = 5000
+	)
+	workers := int64(runtime.GOMAXPROCS(0) * 4)
+
+	b.Run("sharded_counter", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			sc := NewShardedCounter(shards)
+			var wg sync.WaitGroup
+			wg.Add(int(workers))
+			for workerID := range workers {
+				go func(workerID int64) {
+					defer wg.Done()
+					for range incrementsPerGor {
+						sc.Inc(workerID)
+					}
+				}(workerID)
+			}
+			wg.Wait()
+
+			want := workers * incrementsPerGor
+			if got := sc.Total(); got != want {
+				b.Fatalf("sharded total = %d, want %d", got, want)
+			}
+		}
+	})
+
+	b.Run("normal_counter", func(b *testing.B) {
+		for i := 0; i < b.N; i++ {
+			nc := NewCounter(workers * incrementsPerGor)
+			var wg sync.WaitGroup
+			wg.Add(int(workers))
+			for range workers {
+				go func() {
+					defer wg.Done()
+					for range incrementsPerGor {
+						nc.Inc()
+					}
+				}()
+			}
+			wg.Wait()
+
+			want := workers * incrementsPerGor
+			if got := nc.Count; got != want {
+				b.Fatalf("normal total = %d, want %d", got, want)
+			}
+		}
+	})
+}
+
 func BenchmarkAddSliceItems(b *testing.B) {
 	var sC int64
 	b.Run("AddSLiceItemsC", func(b *testing.B) {

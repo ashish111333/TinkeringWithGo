@@ -1,28 +1,16 @@
 package concurrency
 
-import (
-	"sync"
-	"sync/atomic"
-)
+import "sync/atomic"
 
-// Problem: Sharded  Counter
-// every increment spawns a go routine
+// Problem: Sharded Counter
 
 type Sharded_counter struct {
 	shards []int64
-	Wg     sync.WaitGroup
 }
 
 func (sc *Sharded_counter) Inc(worker_id int64) {
-
 	go_routine_idx := int64(worker_id) % int64(len(sc.shards))
-	sc.Wg.Add(1)
-	go func() {
-		defer sc.Wg.Done()
-		atomic.AddInt64(&sc.shards[go_routine_idx], 1)
-
-	}()
-
+	atomic.AddInt64(&sc.shards[go_routine_idx], 1)
 }
 func (sc *Sharded_counter) Total() int64 {
 	var result int64
